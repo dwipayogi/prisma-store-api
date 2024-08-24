@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  buyer
+  seller
+}
+
 model Cart {
   cart_id     Int       @id @default(autoincrement())
   quantity    Int?
@@ -23,10 +28,11 @@ model Customer {
   customer_id  Int     @id @default(autoincrement())
   firstname    String? @db.VarChar(255)
   lastname     String? @db.VarChar(255)
-  email        String? @db.VarChar(255)
+  email        String? @db.VarChar(255) @unique
   password     String? @db.VarChar(255)
   address      String? @db.VarChar(255)
   phone_number String? @db.VarChar(255)
+  role         Role    @default(buyer)
   Cart         Cart[]
 }
 
@@ -37,5 +43,6 @@ model Product {
   price       Int?
   stock       Int?
   rating      Float?  @db.Float
+  image_url   String? @db.VarChar(255)
   Cart        Cart[]
 }

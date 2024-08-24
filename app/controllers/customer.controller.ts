@@ -1,4 +1,7 @@
 import { Request, Response } from "express";
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const secretKey = 'your_secret_key';
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -33,45 +36,6 @@ export const findOne = async (req: Request, res: Response) => {
         message:
           error.message ||
           `Some error occurred while retrieving customer with id ${id}.`,
-      });
-    });
-};
-
-export const createCust = async (req: Request, res: Response) => {
-  const { firstname, lastname, email, password, address, phone_number } =
-    req.body;
-
-  if (
-    !firstname ||
-    !lastname ||
-    !email ||
-    !password ||
-    !address ||
-    !phone_number
-  ) {
-    return res.status(400).send({
-      message: "Please fill all required fields",
-    });
-  }
-
-  const customer = await prisma.customer
-    .create({
-      data: {
-        firstname: firstname,
-        lastname: lastname,
-        email: email,
-        password: password,
-        address: address,
-        phone_number: phone_number,
-      },
-    })
-    .then((customer) => {
-      res.json(customer);
-    })
-    .catch((error) => {
-      res.status(500).send({
-        message:
-          error.message || "Some error occurred while creating the Customer.",
       });
     });
 };
