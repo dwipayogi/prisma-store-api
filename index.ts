@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import { createRouteHandler } from "uploadthing/express";
 import { uploadRouter } from "./scripts/uploadThing";
-import { authenticateToken } from "./app/middlewares/authenticate";
 
 const app = express();
 app.use(express.json());

@@ -1,7 +1,4 @@
 import { Request, Response } from "express";
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const secretKey = 'your_secret_key';
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
