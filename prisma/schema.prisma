@@ -7,42 +7,61 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
+model cart {
+  cart_id    Int      @id @default(autoincrement())
+  quantity   Int?
+  user_id    Int?
+  product_id Int?
+  user       user?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "cart_ibfk_1")
+  product    product? @relation(fields: [product_id], references: [product_id], onDelete: NoAction, onUpdate: NoAction, map: "cart_ibfk_2")
+
+  @@index([product_id], map: "product_id")
+  @@index([user_id], map: "user_id")
+}
+
+model product {
+  product_id  Int    @id @default(autoincrement())
+  name        String @db.VarChar(255)
+  description String @db.VarChar(255)
+  price       Int
+  stock       Int    @default(1)
+  rating      Float  @default(0) @db.Float
+  image_url   String @db.VarChar(255)
+  shop_id     Int?
+  cart        cart[]
+  shop        shop?  @relation(fields: [shop_id], references: [shop_id], onDelete: NoAction, onUpdate: NoAction, map: "product_ibfk_1")
+
+  @@index([shop_id], map: "shop_id")
+}
+
+model shop {
+  shop_id     Int       @id @default(autoincrement())
+  name        String    @unique(map: "name") @db.VarChar(255)
+  description String    @db.VarChar(255)
+  rating      Float     @default(0) @db.Float
+  image_url   String?   @db.VarChar(255)
+  user_id     Int?
+  product     product[]
+  user        user?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "shop_ibfk_1")
+
+  @@index([user_id], map: "user_id")
+}
+
+model user {
+  user_id      Int        @id @default(autoincrement())
+  firstname    String     @db.VarChar(255)
+  lastname     String     @db.VarChar(255)
+  email        String     @unique(map: "email") @db.VarChar(255)
+  password     String     @db.VarChar(255)
+  address      String     @db.VarChar(255)
+  phone_number String?    @unique(map: "phone_number") @db.VarChar(255)
+  image_url    String?    @db.VarChar(255)
+  role         user_role?
+  cart         cart[]
+  shop         shop[]
+}
+
+enum user_role {
   buyer
   seller
-}
-
-model Cart {
-  cart_id     Int       @id @default(autoincrement())
-  quantity    Int?
-  customer_id Int?
-  product_id  Int?
-  Customer    Customer? @relation(fields: [customer_id], references: [customer_id], onDelete: NoAction, onUpdate: NoAction, map: "Cart_ibfk_1")
-  Product     Product?  @relation(fields: [product_id], references: [product_id], onDelete: NoAction, onUpdate: NoAction, map: "Cart_ibfk_2")
-
-  @@index([customer_id], map: "customer_id")
-  @@index([product_id], map: "product_id")
-}
-
-model Customer {
-  customer_id  Int     @id @default(autoincrement())
-  firstname    String? @db.VarChar(255)
-  lastname     String? @db.VarChar(255)
-  email        String? @db.VarChar(255) @unique
-  password     String? @db.VarChar(255)
-  address      String? @db.VarChar(255)
-  phone_number String? @db.VarChar(255)
-  role         Role    @default(buyer)
-  Cart         Cart[]
-}
-
-model Product {
-  product_id  Int     @id @default(autoincrement())
-  name        String? @db.VarChar(255)
-  description String? @db.VarChar(255)
-  price       Int?
-  stock       Int?
-  rating      Float?  @db.Float
-  image_url   String? @db.VarChar(255)
-  Cart        Cart[]
 }
