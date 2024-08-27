@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 
 // Import Route
-import { CustomerRouter } from "./app/routes/customer.routes";
+import { CustomerRouter } from "./app/routes/user.routes";
 import { ProductRouter } from "./app/routes/product.routes";
 import { AuthRouter } from "./app/routes/auth.routes";
 

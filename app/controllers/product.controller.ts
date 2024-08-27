@@ -38,7 +38,7 @@ export const findOne = async (req: Request, res: Response) => {
 };
 
 export const createProd = async (req: Request, res: Response) => {
-  const { name, description, price, stock } = req.body;
+  const { name, description, price, stock, image_url, shop_id } = req.body;
 
   if (!name || !description || !price || !stock) {
     return res.status(400).send({
@@ -53,6 +53,8 @@ export const createProd = async (req: Request, res: Response) => {
         description: description,
         price: price,
         stock: stock,
+        image_url: image_url,
+        shop_id: shop_id,
       },
     })
     .then((product) => {

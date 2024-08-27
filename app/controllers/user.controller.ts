@@ -4,35 +4,35 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const findMany = async (req: Request, res: Response) => {
-  const customer = await prisma.customer
+  const user = await prisma.user
     .findMany()
-    .then((customer) => {
-      res.json(customer);
+    .then((user) => {
+      res.json(user);
     })
     .catch((error) => {
       res.status(500).send({
         message:
-          error.message || "Some error occurred while retrieving customers.",
+          error.message || "Some error occurred while retrieving users.",
       });
     });
 };
 
 export const findOne = async (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
-  const customer = await prisma.customer
+  const user = await prisma.user
     .findUnique({
       where: {
-        customer_id: id,
+        user_id: id,
       },
     })
-    .then((customer) => {
-      res.json(customer);
+    .then((user) => {
+      res.json(user);
     })
     .catch((error) => {
       res.status(500).send({
         message:
           error.message ||
-          `Some error occurred while retrieving customer with id ${id}.`,
+          `Some error occurred while retrieving user with id ${id}.`,
       });
     });
 };
@@ -55,9 +55,9 @@ export const updateCust = async (req: Request, res: Response) => {
     });
   }
 
-  const customer = await prisma.customer
+  const user = await prisma.user
     .update({
-      where: { customer_id: id },
+      where: { user_id: id },
       data: {
         firstname: firstname,
         lastname: lastname,
@@ -67,14 +67,14 @@ export const updateCust = async (req: Request, res: Response) => {
         phone_number: phone_number,
       },
     })
-    .then((customer) => {
-      res.json(customer);
+    .then((user) => {
+      res.json(user);
     })
     .catch((error) => {
       res.status(500).send({
         message:
           error.message ||
-          `Some error occurred while updating Customer with id ${id}.`,
+          `Some error occurred while updating user with id ${id}.`,
       });
     });
 };
@@ -82,26 +82,26 @@ export const updateCust = async (req: Request, res: Response) => {
 export const deleteCust = async (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
 
-  const customer = await prisma.customer
+  const user = await prisma.user
     .delete({
-      where: { customer_id: id },
+      where: { user_id: id },
     })
-    .then((customer) => {
-      res.json(customer);
+    .then((user) => {
+      res.json(user);
     })
     .catch((error) => {
       res.status(500).send({
         message:
           error.message ||
-          `Some error occurred while deleting Customer with id ${id}.`,
+          `Some error occurred while deleting user with id ${id}.`,
       });
     });
 };
 
 export const addToCart = async (req: Request, res: Response) => {
-  const { customer_id, product_id, quantity } = req.body;
+  const { user_id, product_id, quantity } = req.body;
 
-  if (!customer_id || !product_id || !quantity) {
+  if (!user_id || !product_id || !quantity) {
     return res.status(400).send({
       message: "Please fill all required fields",
     });
@@ -109,7 +109,7 @@ export const addToCart = async (req: Request, res: Response) => {
 
   const cartItem = await prisma.cart.findFirst({
     where: {
-      customer_id: customer_id,
+      user_id: user_id,
       product_id: product_id,
     },
   });
@@ -128,7 +128,7 @@ export const addToCart = async (req: Request, res: Response) => {
     const newCart = await prisma.cart.create({
       data: {
         quantity: quantity,
-        customer_id: customer_id,
+        user_id: user_id,
         product_id: product_id,
       },
     });
@@ -138,12 +138,12 @@ export const addToCart = async (req: Request, res: Response) => {
 };
 
 export const viewCart = async (req: Request, res: Response) => {
-  const customer_id = parseInt(req.params.customer_id);
+  const user_id = parseInt(req.params.user_id);
 
   const cart = await prisma.cart
     .findMany({
       where: {
-        customer_id: customer_id,
+        user_id: user_id,
       },
     })
     .then((cart) => {

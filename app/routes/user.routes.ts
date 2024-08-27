@@ -6,7 +6,7 @@ import {
   deleteCust,
   addToCart,
   viewCart,
-} from "../controllers/customer.controller";
+} from "../controllers/user.controller";
 
 export const CustomerRouter = (app: Router) => {
   app.get("/customer", findMany);
